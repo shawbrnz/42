@@ -2,7 +2,7 @@
  * Primary class
  *
  * @Brendan Shaw
- * @version 6, 13/5/22
+ * @version 7, 19/5/22
  */
 import java.io.File;//Allows file stuff
 import java.io.FileWriter;//Allows the writing of files so saved.
@@ -29,29 +29,29 @@ public class Main
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
-            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
-            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+            {false,false,false,false,false,false,false,false,true,false,false,false,false,false,false,false,false,false,false,true},
+            {false,false,false,false,false,false,false,false,true,true,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false}};
     public boolean[][] lastGrid = 
-        {{false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
-            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
-            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+    {{true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+            {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+            {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,false,false,false,false,false,true,true,false,false,false,false,false,false,false,false,false,false},
-            {false,false,false,false,false,false,false,false,false,true,false,false,false,false,false,false,false,false,false,false},
+            {false,false,false,false,false,false,false,false,true,true,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,true,false,false,false,false,true,false,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
-            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
-            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
-            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
-            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+            {false,false,false,false,false,false,false,false,true,false,false,false,false,false,false,false,false,false,false,true},
+            {false,false,false,false,false,false,false,false,true,true,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false}};
     final String SWAP_COMMAND="swap";
     final String END_COMMAND="end";
@@ -92,6 +92,7 @@ public class Main
                 active=true;
                 validCommand=true;
                 System.out.println("Starting one gen?");
+                lastGrid=grid;
             doGen();}
             if ((scannerOutput.equals(ONE_K_GEN_COMMAND))){
                 dontPrint=true;
@@ -99,6 +100,7 @@ public class Main
                 validCommand=true;
                 System.out.println("Starting one k gen?");
             for(int i=0; i<1000;i++){
+                lastGrid=grid;
             doGen();
             }}
             /*      Code to display last generation
@@ -180,7 +182,7 @@ public class Main
                 }
     }
     public void doGen(){
-                lastGrid=grid;
+                
                 int[][] test={{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
                 for(int i=0;i<grid.length;i++){
                     for(int j=0;j<grid[i].length;j++) {
@@ -188,7 +190,6 @@ public class Main
                         int iChange=i+1;
                         int nextToCells=0;
                         if (jChange==grid[i].length){
-                            
                             jChange=0; 
                         }
                         if(iChange==grid.length){
@@ -219,7 +220,7 @@ public class Main
                         //
                         if(nextToCells==3){
                             grid[i][j]=true;
-                        }else if(nextToCells==2&&grid[i][j]){
+                        }else if((nextToCells==2)&&(grid[i][j])){
                             grid[i][j]=true;
                         }else{
                             grid[i][j]=false;
