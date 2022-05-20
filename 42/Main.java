@@ -2,7 +2,7 @@
  * Primary class
  *
  * @Brendan Shaw
- * @version 7, 19/5/22
+ * @version 8, 20/5/22
  */
 import java.io.File;//Allows file stuff
 import java.io.FileWriter;//Allows the writing of files so saved.
@@ -12,47 +12,47 @@ public class Main
 {
     // instance variables - replace the example below with your own
     public boolean[][] grid = 
-        {{true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
-            {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
-            {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+        {{false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
-            {false,false,false,false,false,false,false,false,true,true,false,false,false,false,false,false,false,false,false,false},
-            {false,false,false,false,false,false,false,false,true,true,false,false,false,false,false,false,false,false,false,false},
-            {false,false,false,true,false,false,false,false,true,false,false,false,false,false,false,false,false,false,false,false},
-            {false,false,false,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
-            {false,false,false,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
-            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
-            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
-            {false,false,false,false,false,false,false,false,true,false,false,false,false,false,false,false,false,false,false,true},
-            {false,false,false,false,false,false,false,false,true,true,false,false,false,false,false,false,false,false,false,false},
-            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false}};
+            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+            {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true}};
     public boolean[][] lastGrid = 
-    {{true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
-            {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
-            {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+        {{false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+            {false,false,false,false,false,false,false,false,false,true,false,false,false,false,false,false,false,false,false,false},
+            {false,false,false,false,false,false,false,true,true,false,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,false,false,false,false,false,true,true,false,false,false,false,false,false,false,false,false,false},
-            {false,false,false,false,false,false,false,false,true,true,false,false,false,false,false,false,false,false,false,false},
-            {false,false,false,true,false,false,false,false,true,false,false,false,false,false,false,false,false,false,false,false},
-            {false,false,false,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
-            {false,false,false,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
             {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
-            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
-            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
-            {false,false,false,false,false,false,false,false,true,false,false,false,false,false,false,false,false,false,false,true},
-            {false,false,false,false,false,false,false,false,true,true,false,false,false,false,false,false,false,false,false,false},
-            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false}};
+            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+            {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false},
+            {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true}};
     final String SWAP_COMMAND="swap";
     final String END_COMMAND="end";
     final String START_COMMAND="start";
@@ -81,6 +81,9 @@ public class Main
             //If true, then it wont render at the end of this loop. Used for the generation loop so 
             boolean dontPrint=false;
             //Do generations command
+            ///*      Code to display last generation
+            System.out.println("Last Generation");
+            renderArray(lastGrid);//*/
             if ((scannerOutput.equals(START_COMMAND))){
                 dontPrint=true;
                 active=true;
@@ -92,30 +95,20 @@ public class Main
                 active=true;
                 validCommand=true;
                 System.out.println("Starting one gen?");
-                lastGrid=grid;
-            doGen();}
+                //lastGrid=grid;
+                doGen();}
             if ((scannerOutput.equals(ONE_K_GEN_COMMAND))){
                 dontPrint=true;
                 active=true;
                 validCommand=true;
                 System.out.println("Starting one k gen?");
-            for(int i=0; i<1000;i++){
-                lastGrid=grid;
-            doGen();
-            }}
+                for(int i=0; i<1000;i++){
+                    //lastGrid=grid;
+                    doGen();
+                }}
             /*      Code to display last generation
             System.out.println("Last Generation");
-            for(int i=0;i<lastGrid.length;i++){
-            String line="";
-            for(int j=0;j<lastGrid[i].length;j++) {
-            if(lastGrid[i][j]){
-            line+="A "; 
-            }else{
-            line+="D ";
-            }
-            }
-            System.out.println(line);
-            }*/
+            renderArray(lastGrid);//*/
             boolean endCommands=false;
             while(!endCommands){
                 endCommands=true;
@@ -142,115 +135,103 @@ public class Main
                     System.out.println("Thats outside of this world!");
                 }
             }
-            
+
             //undo command
             if ((scannerOutput.equals(UNDO_COMMAND))){
                 validCommand=true;
                 if(!(grid==lastGrid)){
-                grid=lastGrid;
-                System.out.println("undone?");
-                gen--;
-            }
-            else{
-                System.out.println("Cannot undo");
-            }
-            if ((scannerOutput.equals(RENDER_COMMAND))){
-                validCommand=true;
-            }
-            if(!validCommand){
-                dontPrint=true;
-                System.out.println("You can't this!");
-            }
+                    grid=lastGrid;
+                    System.out.println("undone?");
+                    gen--;
+                }
+                else{
+                    System.out.println("Cannot undo");
+                }
+                if ((scannerOutput.equals(RENDER_COMMAND))){
+                    validCommand=true;
+                }
+                if(!validCommand){
+                    dontPrint=true;
+                    System.out.println("You can't this!");
+                }
             } 
-            //Printing cells
+            //Prints cells if it hasnt been told not to
             if(!dontPrint){
                 renderArray(grid);
             }
         }
     }
+
     public void renderArray(boolean array[][]){
         for(int i=0;i<array.length;i++){
-                    String line="";
-                    for(int j=0;j<array[i].length;j++) {
-                        if(grid[i][j]){
-                            line+="O "; 
-                        }else{
-                            line+="  ";
-                        }
-                    }
-                    System.out.println(line);
+            String line="";
+            for(int j=0;j<array[i].length;j++) {
+                if(grid[i][j]){
+                    line+="O "; 
+                }else{
+                    line+="  ";
                 }
+            }
+            System.out.println(line);
+        }
     }
+
     public void doGen(){
-                
-                int[][] test={{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
-                for(int i=0;i<grid.length;i++){
-                    for(int j=0;j<grid[i].length;j++) {
-                        int jChange=j+1;
-                        int iChange=i+1;
-                        int nextToCells=0;
-                        if (jChange==grid[i].length){
-                            jChange=0; 
-                        }
-                        if(iChange==grid.length){
-                            iChange=0;
-                            
-                        }
-                        nextToCells+=testCell(iChange,jChange);
-                        nextToCells+=testCell(i,jChange);
-                        iChange=i-1;
-                        if(iChange==-1){
-                            iChange=grid.length-1; 
-                        }
-                        nextToCells+=testCell(iChange,jChange);
-                        nextToCells+=testCell(iChange,j);
-                        jChange=j-1;
-                        if(jChange==-1){
-                            jChange=grid[i].length-1; 
-                        }
-                        nextToCells+=testCell(iChange,jChange);
-                        nextToCells+=testCell(i,jChange);
-                        iChange=i+1;
-                        if (iChange==grid.length){
-                            iChange=0; 
-                            
-                        }
-                        nextToCells+=testCell(iChange,jChange);
-                        nextToCells+=testCell(iChange,j);
-                        //
-                        if(nextToCells==3){
-                            grid[i][j]=true;
-                        }else if((nextToCells==2)&&(grid[i][j])){
-                            grid[i][j]=true;
-                        }else{
-                            grid[i][j]=false;
-                        }
-                        test[i][j]=nextToCells;
-                    }
-                }
-                gen++;
-                System.out.println("Generation "+gen);
-                renderArray(grid);
-                ///*
-                System.out.println("Pot for "+gen);
-                for(int i=0;i<test.length;i++){
-                    String line="";
-                    for(int j=0;j<test[i].length;j++) {                  //Shows how many alive tiles adjacent
-                        if(grid[i][j]&&lastGrid[i][j]){
-                        line+=test[i][j]+"A";
-                        }else if(lastGrid[i][j]){line+=test[i][j]+"D";}
-                        else if(grid[i][j]){line+=test[i][j]+"R";}
-                        else{line+=test[i][j]+" ";}
-                    }
-                    System.out.println(line);
-                }
-                System.out.println("End of pot for "+gen);//*/
+
+        int[][] test={{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+        for(int i=0;i<grid.length;i++){
+            for(int j=0;j<grid[i].length;j++) {
+                test[i][j]=testCell(i,j);
+            }
+        }
+        gen++;
+        System.out.println("Generation "+gen);
+        renderArray(grid);
+        ///*
+        System.out.println("Pot for "+gen);
+        for(int i=0;i<test.length;i++){//Shows how many alive tiles adjacent
+            String line="";
+            for(int j=0;j<test[i].length;j++) {                  
+                if(grid[i][j]&&lastGrid[i][j]){
+                    line+=test[i][j]+"A";//If it was alive last grid, add an 'A'
+                }else if(lastGrid[i][j]){line+=test[i][j]+"D";}//If it just died, add a 'D'
+                else if(grid[i][j]){line+=test[i][j]+"R";}//If it just became alive, add an 'R'
+                else{line+=test[i][j]+" ";}//Else, add a space
+            }
+            System.out.println(line);
+        }
+        System.out.println("End of pot for "+gen);//*/
+        lastGrid=grid;
     }
     public int testCell(int y, int x){
-        if (lastGrid[y][x]){
-        return 1;}
-        else{
-        return 0;
+                int nextToCells=0;
+                for(int i=-1;i<2;i++){
+                    for(int j=-1;j<2;j++){
+                        nextToCells+=testAdCell(i,j,y,x);
+                    }
+                }
+                if(nextToCells==3){//If the cell has three neighbors alive, then the cell is alive
+                    grid[y][x]=true;
+                }else if(nextToCells==2){//If the cell was alive and has two neighbors alive, then the cell is alive
+                    grid[y][x]=lastGrid[y][x];
+                }else{//Else the cell is dead
+                    grid[y][x]=false;
+                }
+                //lastGrid[y][x]=grid[y][x];
+                return nextToCells;//Returns alive adjecent cells for the array that shows alive adjecent cells
+    }
+    public int testAdCell(int yLook, int xLook, int yCurrent, int xCurrent){
+        if((yLook+yCurrent)<0){yLook=19;}
+        if((yLook+yCurrent)>19){yLook=-19;}
+        if((xLook+xCurrent)<0){xLook=19;}
+        if((xLook+xCurrent)>19){xLook=-19;}
+        if (yLook==0&&xLook==0){//If it is testing the center cell, return 0
+            return 0;}
+        else if (lastGrid[yLook+yCurrent][xLook+xCurrent]){//If the tested cell in the last generation was alive, return 1
+            return 1;
+        } else {//Else, return 0
+            return 0;
         }
+        
     }
 }

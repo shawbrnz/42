@@ -9,4 +9,6 @@ comment3.params=
 comment3.target=void\ doGen()
 comment4.params=y\ x
 comment4.target=int\ testCell(int,\ int)
-numComments=5
+comment5.params=yLook\ xLook\ yCurrent\ xCurrent
+comment5.target=int\ testAdCell(int,\ int,\ int,\ int)
+numComments=6
