@@ -17,13 +17,20 @@ public class Main
     public boolean[][] thisGen = new boolean[ySize][xSize];
     public boolean[][] lastGen = new boolean[ySize][xSize];
     //Basic commands
-    final String SWAP_COMMAND="swap";
-    final String END_COMMAND="end";
-    final String ONE_GEN_COMMAND="go";
-    final String LOTS_GEN_COMMAND="";
-    final String RENDER_COMMAND="render";
-    final String GRID_COMMAND="grid";
-    final String AD_VAL_COMMAND="advals";
+    final String SWAP_COMMAND="swap";//Toggles swapmode
+    final String DO_COMMAND="do";//Toggles domode
+    final String END_COMMAND="end";//Ends the simulation
+    final String ONE_GEN_COMMAND="go";//Goes one generation
+    final String LOTS_GEN_COMMAND="";//Does lots of generations
+    final String RENDER_COMMAND="render";//renders the generation
+    final String GRID_COMMAND="grid";//Toggles grid 
+    final String AD_VAL_COMMAND="advals";//Toggles the array of adjecent cells
+    final String HELP_COMMAND="help";//Lists all commands
+    final String CUSTOM_COMMAND="customise";//Lists all commands
+    //Modifiable values
+    int scanningRange=1;//The number of tiles each side that each tile scans
+    int comeAlive[]={3};//Number of cells scanned required to come to life
+    int stayAlive[]={2};//Number of cells scanned required to stay alive
     //What generation the game is in
     int gen=0;
     //Amount of generations done when the lots of generations command is played
@@ -31,7 +38,7 @@ public class Main
     //Whether to add the grid to the arrays
     boolean renderGrid = true;
     //Whether to also render the array of adjectent cells
-    boolean renderAdValues = true;
+    boolean renderAdValues = false;
     //The main command
     public Main()
     {
@@ -46,6 +53,8 @@ public class Main
             boolean validCommand=false;
             //Swap mode
             boolean swapMode = false;
+            //do mode
+            boolean doMode = false;
             //If true, then it wont render at the end of this loop. Used for the generation loop so 
             boolean dontRender=false;
             //Do generations command
@@ -53,14 +62,13 @@ public class Main
                 dontRender=true;
                 validCommand=true;
                 System.out.println("Starting one gen?");
-                //lastGrid=grid;
-                doGen();}
+                doGen();
+            }
             if ((scannerOutput.equals(LOTS_GEN_COMMAND))){//Does more than one generation
                 dontRender=true;
                 validCommand=true;
                 System.out.println("Starting "+lotsGenCount+" gen?");
                 for(int i=0; i<lotsGenCount;i++){
-                    //lastGrid=grid;
                     doGen();
                 }
             }
@@ -71,11 +79,11 @@ public class Main
             //toggles grid
             if ((scannerOutput.equals(GRID_COMMAND))){
                 renderGrid=swapBoolean(renderGrid);
-            validCommand=true;}
+                validCommand=true;}
             //toggles adjecent values (debug tool)
             if ((scannerOutput.equals(AD_VAL_COMMAND))){
                 renderAdValues=swapBoolean(renderAdValues);
-            validCommand=true;}
+                validCommand=true;}
             //swap mode
             if ((scannerOutput.equals(SWAP_COMMAND))){
                 validCommand=true;
@@ -98,9 +106,42 @@ public class Main
                     }
                 }
             }
+            //do mode
+            if ((scannerOutput.equals(DO_COMMAND))){
+                validCommand=true;
+                doMode=true;
+                dontRender=true;
+                while(doMode){
+                    System.out.println("Which cell do you wish to do? (Type '"+DO_COMMAND+"' to exit)");
+                    String cellDoing[]=scanner.nextLine().split(" ");
+                    if(cellDoing[0].equals(DO_COMMAND)){//Exits swap mode
+                        doMode=false;
+                    }else if(cellDoing[0].equals(END_COMMAND)){//As a fail safe in case the user (me at the moment) cannot spell swao properly
+                        running=false;
+                        doMode=false;
+                    }else if(cellDoing[0].equals(ONE_GEN_COMMAND)){
+                        swapMode=false;
+                        System.out.println("Leaving do mode and playing 1 generation");
+                        doGen();
+                    }else{//Otherwise it will try to swap the corrdinates
+                        try{
+                            testCell(Integer.parseInt(cellDoing[0]),Integer.parseInt(cellDoing[1]));
+                            renderBooleanArray(thisGen);//Render so user can see modification
+                        }catch(Exception e){
+                            System.out.println("You can't do that");
+                        }
+                    }
+                }
+            }
             //Render command
             if ((scannerOutput.equals(RENDER_COMMAND))){
                 validCommand=true;
+                //All it does is stops the replies with the invalid command, and the auto render renders the generation
+            }
+            //Customise commands
+            if ((scannerOutput.equals(CUSTOM_COMMAND))){//Asks the user what it would like to change and does nothing since my settings are best
+                System.out.println("What do you want to change?");
+                String customOutput=scanner.nextLine().toLowerCase().replace(" ", "");//Removes spaces and sets scanner input to lower case
             }
             //Prints cells if it hasnt been told not to
             if(!dontRender){
@@ -114,9 +155,9 @@ public class Main
         //If the loop stops, then displays this message
         System.out.println("After "+gen+" generation"+plural(gen)+", the Game of Life ends");
     }
-    
+
     //Functions that make my life easier
-    
+
     //Tests to see if number should be plural
     public String plural(int number){
         if(number==1){return "";}
@@ -129,27 +170,29 @@ public class Main
         }
         return true;
     }
-    
+
     
     //Processes swap commands
     public void swap(String coordinates[]){
         try{ 
-            if(thisGen[Integer.parseInt(coordinates[0])][Integer.parseInt(coordinates[1])]){
-                thisGen[Integer.parseInt(coordinates[0])][Integer.parseInt(coordinates[1])]=false;
-                lastGen[Integer.parseInt(coordinates[0])][Integer.parseInt(coordinates[1])]=false;
+            if(thisGen[Integer.parseInt(coordinates[0])-1][Integer.parseInt(coordinates[1])-1]){
+                thisGen[Integer.parseInt(coordinates[0])-1][Integer.parseInt(coordinates[1])-1]=false;
+                lastGen[Integer.parseInt(coordinates[0])-1][Integer.parseInt(coordinates[1])-1]=false;
             }else{
-                thisGen[Integer.parseInt(coordinates[0])][Integer.parseInt(coordinates[1])]=true;
-                lastGen[Integer.parseInt(coordinates[0])][Integer.parseInt(coordinates[1])]=true;
+                thisGen[Integer.parseInt(coordinates[0])-1][Integer.parseInt(coordinates[1])-1]=true;
+                lastGen[Integer.parseInt(coordinates[0])-1][Integer.parseInt(coordinates[1])-1]=true;
             }
         }
         catch(Exception e){
-            //e.printStackTrace();
             System.out.println("Thats outside of this world!");
         }
         renderBooleanArray(thisGen);//Render so user can see modification
     }
 
+    
     //Playing generation commands
+    
+    
     //Do a generation command
     public void doGen(){
         for(int i=0;i<thisGen.length;i++){//Converts last grid to this grid
@@ -180,17 +223,26 @@ public class Main
     public int testCell(int y, int x){
         //Tests the cell
         int nextToCells=0;
-        for(int i=-1;i<=1;i++){
-            for(int j=-1;j<=1;j++){
+        for(int i=-scanningRange;i<=scanningRange;i++){
+            for(int j=-scanningRange;j<=scanningRange;j++){
                 nextToCells+=testAdCell(i,j,y,x);
             }
         }
         //Updates the cell 
-        if(nextToCells==3){//If the cell has three neighbors alive, then the cell is alive
-            thisGen[y][x]=true;
-        }else if(nextToCells==2){//If the cell was alive and has two neighbors alive, then the cell is alive
-            thisGen[y][x]=lastGen[y][x];
-        }else{//Else the cell is dead
+        boolean autoKill= true;//Will kill the cell if non of the otehr condtions are met
+        for(int i=0; i<stayAlive.length;i++){
+            if(nextToCells==stayAlive[i]){//If the cell was alive and has two neighbors alive, then the cell is alive
+                thisGen[y][x]=lastGen[y][x];
+                autoKill=false;
+            }
+        }  
+        for(int i=0; i<comeAlive.length;i++){
+            if(nextToCells==comeAlive[i]){//If the cell has three neighbors alive, then the cell is alive
+                thisGen[y][x]=true;
+                autoKill=false;
+            }
+        }
+        if(autoKill){//Else the cell is dead
             thisGen[y][x]=false;
         }
         return nextToCells;//Returns alive adjecent cells for the array that shows alive adjecent cells
@@ -213,10 +265,8 @@ public class Main
 
     }
 
-    
     //Render Arrays
 
-    
     //Boolean arrays
 
     //Renders a 2d boolean array with a grid
@@ -366,4 +416,3 @@ public class Main
         }
     }
 }
-
