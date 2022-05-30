@@ -2,7 +2,7 @@
  * Primary class
  *
  * @Brendan Shaw
- * @version 11, 30/5/22
+ * @version 12, 31/5/22
  */
 import java.io.File;//Allows file stuff
 import java.io.FileWriter;//Allows the writing of files so saved.
@@ -11,11 +11,7 @@ import java.util.Scanner;//Importing Scanner so keyboard inputs can be recorded.
 public class Main
 {
     // instance variables
-    //Create arrays
-    final int xSize=30;
-    final int ySize=40;
-    public boolean[][] thisGen = new boolean[ySize][xSize];
-    public boolean[][] lastGen = new boolean[ySize][xSize];
+
     //Basic commands
     final String SWAP_COMMAND="swap";//Toggles swapmode
     final String DO_COMMAND="do";//Toggles domode
@@ -26,13 +22,16 @@ public class Main
     final String GRID_COMMAND="grid";//Toggles grid 
     final String AD_VAL_COMMAND="advals";//Toggles the array of adjecent cells
     final String HELP_COMMAND="help";//Lists all commands
-    final String CUSTOM_COMMAND="customise";//Lists all commands
+    final String CUSTOM_COMMAND="customise";//Allows customisation
     //Modifiable values
     int scanningRange=1;//The number of tiles each side that each tile scans
     int comeAlive[]={3};//Number of cells scanned required to come to life
     int stayAlive[]={2};//Number of cells scanned required to stay alive
     //What generation the game is in
     int gen=0;
+    //X and Y size, in case the while loop breaks
+    int ySize=0;
+    int xSize=0;
     //Amount of generations done when the lots of generations command is played
     int lotsGenCount=100;
     //Whether to add the grid to the arrays
@@ -42,11 +41,48 @@ public class Main
     //The main command
     public Main()
     {
+        Scanner scanner = new Scanner(System.in);//Set up the scanner
+        System.out.println("Would you like start a 'basic' setup or an 'advanced' setup?");
+        String setupScannerOutput=scanner.nextLine().toLowerCase().replace(" ", "");//Removes spaces and sets scanner input to lower case
+        if(setupScannerOutput.equals("advanced")){//Advanced setup
+            boolean inSetup=true;
+            while(inSetup){
+                boolean dontBreak=true;
+                while (dontBreak){
+                    try{//Y size
+                        System.out.println("How wide do you want the world to be");
+                        ySize=(Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", "")));//Removes spaces and sets scanner input to lower case
+                        dontBreak=false;
+                    }catch(Exception e){
+                        System.out.println("That isn't a number");
+                    }
+                }
+                dontBreak=true;
+                while (dontBreak){
+                    try{//X size
+                        System.out.println("How tall do you want the world to be");
+                        xSize=(Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", "")));//Removes spaces and sets scanner input to lower case
+                        dontBreak=false;
+                    }catch(Exception e){
+                        System.out.println("That isn't a number");
+                    }
+                }
+            }
+        }else{//In case the user decides that they don't want to type one of my commands, a basic setup will occur
+            //Setup values
+            int scanningRange=1;//The number of tiles each side that each tile scans
+            int comeAlive[]={3};//Number of cells scanned required to come to life
+            int stayAlive[]={2};//Number of cells scanned required to stay alive
+            //Create arrays
+            xSize=30;
+            ySize=40;
+        }
+        boolean[][] thisGen = new boolean[ySize][xSize];
+        boolean[][] lastGen = new boolean[ySize][xSize];
         //Keeps the game running until it is killed
         boolean running=true;
         while (running){
             //Reads input
-            Scanner scanner = new Scanner(System.in);//Set up the scanner
             System.out.println("What do you want to do?");
             String scannerOutput=scanner.nextLine().toLowerCase().replace(" ", "");//Removes spaces and sets scanner input to lower case
             //If none of the commands work, then this should tell the user
@@ -171,7 +207,6 @@ public class Main
         return true;
     }
 
-    
     //Processes swap commands
     public void swap(String coordinates[]){
         try{ 
@@ -189,10 +224,8 @@ public class Main
         renderBooleanArray(thisGen);//Render so user can see modification
     }
 
-    
     //Playing generation commands
-    
-    
+
     //Do a generation command
     public void doGen(){
         for(int i=0;i<thisGen.length;i++){//Converts last grid to this grid
