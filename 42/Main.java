@@ -2,7 +2,7 @@
  * Primary class
  *
  * @Brendan Shaw
- * @version 12, 31/5/22
+ * @version 13, 1/6/22
  */
 import java.io.File;//Allows file stuff
 import java.io.FileWriter;//Allows the writing of files so saved.
@@ -38,6 +38,9 @@ public class Main
     boolean renderGrid = true;
     //Whether to also render the array of adjectent cells
     boolean renderAdValues = false;
+    //Testty
+    boolean thisGen[][];
+    boolean lastGen[][];
     //The main command
     public Main()
     {
@@ -67,6 +70,45 @@ public class Main
                         System.out.println("That isn't a number");
                     }
                 }
+                dontBreak=true;
+                while (dontBreak){
+                    try{//Scanner size
+                        System.out.println("How many adjecent cells would you like the cells to scan");
+                        scanningRange=(Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", "")));//Removes spaces and sets scanner input to lower case
+                        dontBreak=false;
+                    }catch(Exception e){
+                        System.out.println("That isn't a number");
+                    }
+                }
+                dontBreak=true;
+                while (dontBreak){
+                    try{//Required amount of cell to stay alive
+                        System.out.println("How many numbers of cells do you want to be required for the cell to stay the same?");
+                        int stayAlive[]=new int[Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""))];//Removes spaces and sets scanner input to lower case
+                        for(int i=0;i<stayAlive.length;i++){
+                            System.out.println("What would you like to be the first cell");
+                            stayAlive[i]=Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""));//Removes spaces and sets scanner input to lower case
+                        }
+                        dontBreak=false;
+                    }catch(Exception e){
+                        System.out.println("That isn't a number");
+                    }
+                }
+                dontBreak=true;
+                while (dontBreak){
+                    try{//Required amount of cell to become alive
+                        System.out.println("How many numbers of cells do you want to be required for the cell to stay the same?");
+                        int comeAlive[]=new int[Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""))];//Removes spaces and sets scanner input to lower case
+                        for(int i=0;i<comeAlive.length;i++){
+                            System.out.println("What would you like to be the first cell");
+                            stayAlive[i]=Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""));//Removes spaces and sets scanner input to lower case
+                        }
+                        dontBreak=false;
+                    }catch(Exception e){
+                        System.out.println("That isn't a number");
+                    }
+                }
+                
             }
         }else{//In case the user decides that they don't want to type one of my commands, a basic setup will occur
             //Setup values
@@ -77,8 +119,8 @@ public class Main
             xSize=30;
             ySize=40;
         }
-        boolean[][] thisGen = new boolean[ySize][xSize];
-        boolean[][] lastGen = new boolean[ySize][xSize];
+        thisGen = new boolean[ySize][xSize];
+        lastGen = new boolean[ySize][xSize];
         //Keeps the game running until it is killed
         boolean running=true;
         while (running){
