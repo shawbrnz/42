@@ -2,7 +2,7 @@
  * Primary class
  *
  * @Brendan Shaw
- * @version 13, 1/6/22
+ * @version 14, 8/6/22
  */
 import java.io.File;//Allows file stuff
 import java.io.FileWriter;//Allows the writing of files so saved.
@@ -53,9 +53,13 @@ public class Main
                 boolean dontBreak=true;
                 while (dontBreak){
                     try{//Y size
-                        System.out.println("How wide do you want the world to be");
+                        System.out.println("How wide do you want the world to be? NB- Large world size ");
                         ySize=(Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", "")));//Removes spaces and sets scanner input to lower case
-                        dontBreak=false;
+                        if (!(ySize<1)){
+                            dontBreak=false;
+                        }else{
+                            System.out.println("That isn't a number");
+                        }
                     }catch(Exception e){
                         System.out.println("That isn't a number");
                     }
@@ -65,6 +69,11 @@ public class Main
                     try{//X size
                         System.out.println("How tall do you want the world to be");
                         xSize=(Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", "")));//Removes spaces and sets scanner input to lower case
+                        if (!(xSize<1)){
+                            dontBreak=false;
+                        }else{
+                            System.out.println("That isn't a number");
+                        }
                         dontBreak=false;
                     }catch(Exception e){
                         System.out.println("That isn't a number");
@@ -75,6 +84,11 @@ public class Main
                     try{//Scanner size
                         System.out.println("How many adjecent cells would you like the cells to scan");
                         scanningRange=(Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", "")));//Removes spaces and sets scanner input to lower case
+                        if (!(scanningRange<1)){
+                            dontBreak=false;
+                        }else{
+                            System.out.println("That isn't a number");
+                        }
                         dontBreak=false;
                     }catch(Exception e){
                         System.out.println("That isn't a number");
@@ -86,7 +100,7 @@ public class Main
                         System.out.println("How many numbers of cells do you want to be required for the cell to stay the same?");
                         int stayAlive[]=new int[Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""))];//Removes spaces and sets scanner input to lower case
                         for(int i=0;i<stayAlive.length;i++){
-                            System.out.println("What would you like to be the first cell");
+                            System.out.println("What number of cells required to stay the same?");
                             stayAlive[i]=Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""));//Removes spaces and sets scanner input to lower case
                         }
                         dontBreak=false;
@@ -97,10 +111,10 @@ public class Main
                 dontBreak=true;
                 while (dontBreak){
                     try{//Required amount of cell to become alive
-                        System.out.println("How many numbers of cells do you want to be required for the cell to stay the same?");
-                        int comeAlive[]=new int[Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""))];//Removes spaces and sets scanner input to lower case
+                        System.out.println("How many numbers of cells do you want to be required for the cell to become?");
+                        setupScannerOutput=scanner.nextLine().toLowerCase().replace(" ", "");//Removes spaces and sets scanner input to lower case
                         for(int i=0;i<comeAlive.length;i++){
-                            System.out.println("What would you like to be the first cell");
+                            System.out.println("What number of cells required to become alive?");
                             stayAlive[i]=Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""));//Removes spaces and sets scanner input to lower case
                         }
                         dontBreak=false;
@@ -108,7 +122,19 @@ public class Main
                         System.out.println("That isn't a number");
                     }
                 }
-                
+                dontBreak=true;
+                while (dontBreak){
+                    try{//Check to see if the settings are okay
+                        System.out.println("Are the settings okay? 'Yes' or 'No'");
+                        setupScannerOutput=scanner.nextLine().toLowerCase().replace(" ", "");//Removes spaces and sets scanner input to lower case
+                        if(setupScannerOutput.equals("yes")){//If the user decides that yes or no is not a good enough answer, they will have to redo the setup
+                            inSetup=false;
+                        }
+                        dontBreak=false;
+                    }catch(Exception e){
+                        System.out.println("Error");
+                    }
+                }
             }
         }else{//In case the user decides that they don't want to type one of my commands, a basic setup will occur
             //Setup values
