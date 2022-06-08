@@ -2,7 +2,7 @@
  * Primary class
  *
  * @Brendan Shaw
- * @version 14, 8/6/22
+ * @version 15, 9/6/22
  */
 import java.io.File;//Allows file stuff
 import java.io.FileWriter;//Allows the writing of files so saved.
@@ -58,7 +58,7 @@ public class Main
                         if (!(ySize<1)){
                             dontBreak=false;
                         }else{
-                            System.out.println("That isn't a number");
+                            System.out.println("That is too small number");
                         }
                     }catch(Exception e){
                         System.out.println("That isn't a number");
@@ -72,7 +72,7 @@ public class Main
                         if (!(xSize<1)){
                             dontBreak=false;
                         }else{
-                            System.out.println("That isn't a number");
+                            System.out.println("That is too small number");
                         }
                         dontBreak=false;
                     }catch(Exception e){
@@ -87,7 +87,7 @@ public class Main
                         if (!(scanningRange<1)){
                             dontBreak=false;
                         }else{
-                            System.out.println("That isn't a number");
+                            System.out.println("That is too small number");
                         }
                         dontBreak=false;
                     }catch(Exception e){
@@ -102,7 +102,12 @@ public class Main
                         for(int i=0;i<stayAlive.length;i++){
                             System.out.println("What number of cells required to stay the same?");
                             stayAlive[i]=Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""));//Removes spaces and sets scanner input to lower case
-                        }
+                            if (!(stayAlive[i]<1)){
+                                dontBreak=false;
+                                i=comeAlive.length;
+                            }else{
+                                System.out.println("That is too small number");
+                            }}
                         dontBreak=false;
                     }catch(Exception e){
                         System.out.println("That isn't a number");
@@ -115,7 +120,13 @@ public class Main
                         setupScannerOutput=scanner.nextLine().toLowerCase().replace(" ", "");//Removes spaces and sets scanner input to lower case
                         for(int i=0;i<comeAlive.length;i++){
                             System.out.println("What number of cells required to become alive?");
-                            stayAlive[i]=Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""));//Removes spaces and sets scanner input to lower case
+                            comeAlive[i]=Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""));//Removes spaces and sets scanner input to lower case
+                            if (!(comeAlive[i]<1)){
+                                dontBreak=false;
+                                i=comeAlive.length;
+                            }else{
+                                System.out.println("That is too small number");
+                            }
                         }
                         dontBreak=false;
                     }catch(Exception e){
