@@ -2,7 +2,7 @@
  * Primary class
  *
  * @Brendan Shaw
- * @version 15, 9/6/22
+ * @version 16, 16/6/22
  */
 import java.io.File;//Allows file stuff
 import java.io.FileWriter;//Allows the writing of files so saved.
@@ -12,35 +12,35 @@ public class Main
 {
     // instance variables
 
-    //Basic commands
-    final String SWAP_COMMAND="swap";//Toggles swapmode
-    final String DO_COMMAND="do";//Toggles domode
-    final String END_COMMAND="end";//Ends the simulation
-    final String ONE_GEN_COMMAND="go";//Goes one generation
-    final String LOTS_GEN_COMMAND="";//Does lots of generations
-    final String RENDER_COMMAND="render";//renders the generation
-    final String GRID_COMMAND="grid";//Toggles grid 
-    final String AD_VAL_COMMAND="advals";//Toggles the array of adjecent cells
-    final String HELP_COMMAND="help";//Lists all commands
-    final String CUSTOM_COMMAND="customise";//Allows customisation
-    //Modifiable values
-    int scanningRange=1;//The number of tiles each side that each tile scans
-    int comeAlive[]={3};//Number of cells scanned required to come to life
-    int stayAlive[]={2};//Number of cells scanned required to stay alive
+    //Commands. This is in an array for easy modification
+    String commands[]={
+    "end",//Ends the simulation
+    "go",//Goes one generation
+    "lots",//Does lots of generations
+    "grid",//Toggles grid 
+    "advals",//Toggles the array of adjecent cells
+    "swap",//Toggles swapmode
+    "do",//Toggles domode
+    "render",//renders the generation
+    "customise",//Allows customisation
+    "help"};//Lists all commands
     //What generation the game is in
     int gen=0;
     //X and Y size, in case the while loop breaks
     int ySize=0;
     int xSize=0;
-    //Amount of generations done when the lots of generations command is played
-    int lotsGenCount=100;
     //Whether to add the grid to the arrays
     boolean renderGrid = true;
     //Whether to also render the array of adjectent cells
     boolean renderAdValues = false;
-    //Testty
+    //Creates array
     boolean thisGen[][];
     boolean lastGen[][];
+    //Modifiable varibles
+    int scanningRange=1;//The number of tiles each side that each tile scans
+    int comeAlive[]={3};//Number of cells scanned required to come to life
+    int stayAlive[]={2};//Number of cells scanned required to stay alive
+    int lotsGenCount=100;//Amount of generations done when the lots of generations command is played
     //The main command
     public Main()
     {
@@ -172,14 +172,18 @@ public class Main
             boolean doMode = false;
             //If true, then it wont render at the end of this loop. Used for the generation loop so 
             boolean dontRender=false;
+            //end command. It is first so user cannot softlock if user modifies preferences file
+            if ((scannerOutput.equals(commands[0]))){
+                running=false;
+                validCommand=true;}
             //Do generations command
-            if ((scannerOutput.equals(ONE_GEN_COMMAND))){//Does one generation
+            if ((scannerOutput.equals(commands[1]))){//Does one generation
                 dontRender=true;
                 validCommand=true;
                 System.out.println("Starting one gen?");
                 doGen();
             }
-            if ((scannerOutput.equals(LOTS_GEN_COMMAND))){//Does more than one generation
+            if ((scannerOutput.equals(commands[2]))){//Does more than one generation
                 dontRender=true;
                 validCommand=true;
                 System.out.println("Starting "+lotsGenCount+" gen?");
@@ -187,32 +191,28 @@ public class Main
                     doGen();
                 }
             }
-            //end command
-            if ((scannerOutput.equals(END_COMMAND))){
-                running=false;
-                validCommand=true;}
             //toggles grid
-            if ((scannerOutput.equals(GRID_COMMAND))){
+            if ((scannerOutput.equals(commands[3]))){
                 renderGrid=swapBoolean(renderGrid);
                 validCommand=true;}
             //toggles adjecent values (debug tool)
-            if ((scannerOutput.equals(AD_VAL_COMMAND))){
+            if ((scannerOutput.equals(commands[4]))){
                 renderAdValues=swapBoolean(renderAdValues);
                 validCommand=true;}
             //swap mode
-            if ((scannerOutput.equals(SWAP_COMMAND))){
+            if ((scannerOutput.equals(commands[5]))){
                 validCommand=true;
                 swapMode=true;
                 dontRender=true;
                 while(swapMode){
-                    System.out.println("What do you wish to swap? (Type '"+SWAP_COMMAND+"' to exit)");
+                    System.out.println("What do you wish to swap? (Type '"+commands[5]+"' to exit)");
                     String cellSwapping[]=scanner.nextLine().split(" ");
-                    if(cellSwapping[0].equals(SWAP_COMMAND)){//Exits swap mode
+                    if(cellSwapping[0].equals(commands[5])){//Exits swap mode
                         swapMode=false;
-                    }else if(cellSwapping[0].equals(END_COMMAND)){//As a fail safe in case the user (me at the moment) cannot spell swao properly
+                    }else if(cellSwapping[0].equals(commands[0])){//As a fail safe in case the user (me at the moment) cannot spell swao properly
                         running=false;
                         swapMode=false;
-                    }else if(cellSwapping[0].equals(ONE_GEN_COMMAND)){
+                    }else if(cellSwapping[0].equals(commands[1])){
                         swapMode=false;
                         System.out.println("Leaving swap mode and playing 1 generation");
                         doGen();
@@ -222,19 +222,19 @@ public class Main
                 }
             }
             //do mode
-            if ((scannerOutput.equals(DO_COMMAND))){
+            if ((scannerOutput.equals(commands[6]))){
                 validCommand=true;
                 doMode=true;
                 dontRender=true;
                 while(doMode){
-                    System.out.println("Which cell do you wish to do? (Type '"+DO_COMMAND+"' to exit)");
+                    System.out.println("Which cell do you wish to do? (Type '"+commands[6]+"' to exit)");
                     String cellDoing[]=scanner.nextLine().split(" ");
-                    if(cellDoing[0].equals(DO_COMMAND)){//Exits swap mode
+                    if(cellDoing[0].equals(commands[6])){//Exits swap mode
                         doMode=false;
-                    }else if(cellDoing[0].equals(END_COMMAND)){//As a fail safe in case the user (me at the moment) cannot spell swao properly
+                    }else if(cellDoing[0].equals(commands[0])){//As a fail safe in case the user (me at the moment) cannot spell swao properly
                         running=false;
                         doMode=false;
-                    }else if(cellDoing[0].equals(ONE_GEN_COMMAND)){
+                    }else if(cellDoing[0].equals(commands[1])){
                         swapMode=false;
                         System.out.println("Leaving do mode and playing 1 generation");
                         doGen();
@@ -249,14 +249,34 @@ public class Main
                 }
             }
             //Render command
-            if ((scannerOutput.equals(RENDER_COMMAND))){
+            if ((scannerOutput.equals(commands[7]))){
                 validCommand=true;
                 //All it does is stops the replies with the invalid command, and the auto render renders the generation
             }
             //Customise commands
-            if ((scannerOutput.equals(CUSTOM_COMMAND))){//Asks the user what it would like to change and does nothing since my settings are best
-                System.out.println("What do you want to change?");
-                String customOutput=scanner.nextLine().toLowerCase().replace(" ", "");//Removes spaces and sets scanner input to lower case
+            if ((scannerOutput.equals(commands[8]))){//Asks the user what it would like to change and does nothing since my settings are best
+                System.out.println("What do you want to change? (Use current command name)");
+                String modifyingCommandName=scanner.nextLine().toLowerCase().replace(" ", "");//Removes spaces and sets scanner input to lower case
+                System.out.println("What do you want the new command to be? (Cannot be the name of an existing command)");
+                String newCommandName=scanner.nextLine().toLowerCase().replace(" ", "");//Removes spaces and sets scanner input to lower case
+                boolean existingName=false;
+                for(int i=0;i<commands.length;i++){
+                    if(commands[i]==modifyingCommandName){
+                        for(int j=0;j<commands.length;j++){
+                            if(newCommandName.equals(commands[j])){
+                                existingName=true;
+                            }
+                        }
+                        if(!existingName){
+                             commands[i]=newCommandName;
+                        }
+                        i=commands.length;
+                    }
+                }
+            }
+            //Help command
+            if ((scannerOutput.equals(commands[9]))){//Asks the user what it would like to change and does nothing since my settings are best
+                System.out.println("[HELP_COMMAND]");
             }
             //Prints cells if it hasnt been told not to
             if(!dontRender){
@@ -328,8 +348,10 @@ public class Main
         System.out.println("Generation "+gen);
         renderBooleanArray(thisGen);
         //Renders ajacent cells alive last generation
-        System.out.println("Ad cells for "+gen);
-        renderIntArray(adCellsAlive);
+        if(renderAdValues){
+            System.out.println("Ad cells for "+gen);
+            renderIntArray(adCellsAlive);
+        }
     }
     //Tests a cell for how many adjcent cells are alive
     public int testCell(int y, int x){
