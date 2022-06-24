@@ -2,7 +2,7 @@
  * Primary class
  *
  * @Brendan Shaw
- * @version 16, 16/6/22
+ * @version 17, 24/6/22
  */
 import java.io.File;//Allows file stuff
 import java.io.FileWriter;//Allows the writing of files so saved.
@@ -14,16 +14,18 @@ public class Main
 
     //Commands. This is in an array for easy modification
     String commands[]={
-    "end",//Ends the simulation
-    "go",//Goes one generation
-    "lots",//Does lots of generations
-    "grid",//Toggles grid 
-    "advals",//Toggles the array of adjecent cells
-    "swap",//Toggles swapmode
-    "do",//Toggles domode
-    "render",//renders the generation
-    "customise",//Allows customisation
-    "help"};//Lists all commands
+            "end",//Ends the simulation
+            "go",//Goes one generation
+            "lots",//Does lots of generations
+            "grid",//Toggles grid 
+            "advals",//Toggles the array of adjecent cells
+            "swap",//Toggles swapmode
+            "do",//Toggles domode
+            "render",//renders the generation
+            "customise",//Allows customisation
+            "help",//Lists all commands
+            "save",//Saves this generation
+            "load"};//Loads from save file
     //What generation the game is in
     int gen=0;
     //X and Y size, in case the while loop breaks
@@ -41,6 +43,8 @@ public class Main
     int comeAlive[]={3};//Number of cells scanned required to come to life
     int stayAlive[]={2};//Number of cells scanned required to stay alive
     int lotsGenCount=100;//Amount of generations done when the lots of generations command is played
+    //Save file names
+    final String COMMANDS_FILE="commands.txt";
     //The main command
     public Main()
     {
@@ -254,7 +258,7 @@ public class Main
                 //All it does is stops the replies with the invalid command, and the auto render renders the generation
             }
             //Customise commands
-            if ((scannerOutput.equals(commands[8]))){//Asks the user what it would like to change and does nothing since my settings are best
+            if ((scannerOutput.equals(commands[8]))){//Asks the user what it would like to change
                 System.out.println("What do you want to change? (Use current command name)");
                 String modifyingCommandName=scanner.nextLine().toLowerCase().replace(" ", "");//Removes spaces and sets scanner input to lower case
                 System.out.println("What do you want the new command to be? (Cannot be the name of an existing command)");
@@ -268,15 +272,26 @@ public class Main
                             }
                         }
                         if(!existingName){
-                             commands[i]=newCommandName;
+                            commands[i]=newCommandName;
+                            String stringOfCommands="";
+                            for(int j=0;j<commands.length;j++){
+                                stringOfCommands+=commands[j]+",";
+                            }
+                            save(COMMANDS_FILE, stringOfCommands);
                         }
                         i=commands.length;
                     }
                 }
+                validCommand=true;
+                dontRender=true;
             }
             //Help command
-            if ((scannerOutput.equals(commands[9]))){//Asks the user what it would like to change and does nothing since my settings are best
-                System.out.println("[HELP_COMMAND]");
+            if ((scannerOutput.equals(commands[9]))){//Lists all commands
+                for(int i=0;i<commands.length;i++){
+                    System.out.println(commands[i]);
+                }
+                validCommand=true;
+                dontRender=true;
             }
             //Prints cells if it hasnt been told not to
             if(!dontRender){
@@ -548,5 +563,29 @@ public class Main
         }else{
             gridlessIntArray(array);
         }
+    }
+
+    //Files stuff
+
+    //Saves string to file
+    public void save(String fileName, String stuffToSave){
+        try{
+            FileWriter writer=new FileWriter(fileName);
+            writer.write(stuffToSave);
+            writer.flush();
+            writer.close();
+        }catch(IOException e){
+            System.out.println(fileName+" does not exist. To save, create a file named '"+fileName+"'");
+        }
+    }
+    //Loads string from file
+    public String load(String fileName){
+        try{
+            Scanner readFile=new Scanner(new File(fileName));
+            return readFile.nextLine();
+        }catch(IOException e){
+            System.out.println(fileName+" does not exist. To load this file, create a file named '"+fileName+"'");
+        }
+        return "";
     }
 }

@@ -1,1 +1,0 @@
-42, The Answer to Life, the Universe and Everything (Game of Life)
