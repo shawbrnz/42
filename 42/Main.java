@@ -2,7 +2,7 @@
  * Primary class
  *
  * @Brendan Shaw
- * @version 17, 24/6/22
+ * @version 18, 29/6/22
  */
 import java.io.File;//Allows file stuff
 import java.io.FileWriter;//Allows the writing of files so saved.
@@ -45,11 +45,12 @@ public class Main
     int lotsGenCount=100;//Amount of generations done when the lots of generations command is played
     //Save file names
     final String COMMANDS_FILE="commands.txt";
+    final String SAVES_FILE="saves.txt";
     //The main command
     public Main()
     {
         Scanner scanner = new Scanner(System.in);//Set up the scanner
-        System.out.println("Would you like start a 'basic' setup or an 'advanced' setup?");
+        System.out.println("Would you like start a 'basic' setup, an 'advanced' setup or '"+commands[11]+"'?");
         String setupScannerOutput=scanner.nextLine().toLowerCase().replace(" ", "");//Removes spaces and sets scanner input to lower case
         if(setupScannerOutput.equals("advanced")){//Advanced setup
             boolean inSetup=true;
@@ -148,6 +149,26 @@ public class Main
                         dontBreak=false;
                     }catch(Exception e){
                         System.out.println("Error");
+                    }
+                }
+            }
+        }else if(setupScannerOutput.equals(commands[11])){//Stuff for loading
+            String saveFiles[]=load(SAVES_FILE).split(",");
+            System.out.println("Save files-");
+            for(int i=0;i<saveFiles.length;i++){
+                System.out.println(saveFiles[i]);
+            }
+            boolean dontBreak=true;
+            while (dontBreak){
+                try{//Check to make sure that it is an actual file
+                    System.out.println("Which save file to you wish to load?");
+                    setupScannerOutput=scanner.nextLine().toLowerCase().replace(" ", "");//Removes spaces and sets scanner input to lower case
+                    String arrayOfThisGen[]=load(SAVES_FILE).split(",");
+                    dontBreak=false;
+                }catch(Exception e){
+                    System.out.println("Save files-");
+                    for(int i=0;i<saveFiles.length;i++){
+                        System.out.println(saveFiles[i]);
                     }
                 }
             }
@@ -290,6 +311,48 @@ public class Main
                 for(int i=0;i<commands.length;i++){
                     System.out.println(commands[i]);
                 }
+                validCommand=true;
+                dontRender=true;
+            }
+            //Save command
+            if ((scannerOutput.equals(commands[10]))){//Saves current state of life
+                boolean dontBreak=true;
+                String saveFileName="error.txt";//Forces the program to write to error.txt in case of errorsav
+                while (dontBreak){
+                    try{//Check to see if the user wishs to save to a file which it should not
+                        System.out.println("Where would you like to save to? (Does not need .txt)");
+                        saveFileName=(scanner.nextLine().toLowerCase().replace(" ", ""))+".txt";//Removes spaces and sets scanner input to lower case
+                        if(saveFileName.equals(SAVES_FILE)||saveFileName.equals(COMMANDS_FILE)){//If the user decides that yes or no is not a good enough answer, they will have to redo the setup
+                            System.out.println("Cannot save to this file, please save to another file");
+                        }else{
+                            String saveFiles[]=load(SAVES_FILE).split(",");
+                            String responce="yes";
+                            for(int i=0;i<saveFiles.length;i++){
+                                if(saveFileName.equals(saveFiles[i])){//Asks user if they would like to override the selected file
+                                    System.out.println("There is a file with that name already, do you wish to override?");
+                                    responce=(scanner.nextLine().toLowerCase().replace(" ", ""));//Removes spaces and sets scanner input to lower case 
+                                }
+                            }
+                            if(responce.equals("yes")){//Requires the responce to be yes, so if the user does a typo, the file wont be overriden
+                                dontBreak=false;
+                            }
+                        }
+                    }catch(Exception e){
+                        System.out.println("Error, please try again");
+                    }
+                }
+                String thisGenInStr="";//Converts this generation into a single string
+                for(int i=0;i<thisGen.length;i++){
+                    for(int j=0;j<thisGen[i].length;j++){
+                        if(thisGen[i][j]){
+                            thisGenInStr+="1";
+                        }else{
+                            thisGenInStr+="0";
+                        }
+                    }
+                    thisGenInStr+=",";
+                }
+                save(saveFileName,thisGenInStr);
                 validCommand=true;
                 dontRender=true;
             }
@@ -585,7 +648,7 @@ public class Main
             return readFile.nextLine();
         }catch(IOException e){
             System.out.println(fileName+" does not exist. To load this file, create a file named '"+fileName+"'");
+            return "";
         }
-        return "";
     }
 }
