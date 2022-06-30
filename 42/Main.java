@@ -2,7 +2,7 @@
  * Primary class
  *
  * @Brendan Shaw
- * @version 18, 29/6/22
+ * @version 19, 30/6/22
  */
 import java.io.File;//Allows file stuff
 import java.io.FileWriter;//Allows the writing of files so saved.
@@ -40,8 +40,8 @@ public class Main
     boolean lastGen[][];
     //Modifiable varibles
     int scanningRange=1;//The number of tiles each side that each tile scans
-    int comeAlive[]={3};//Number of cells scanned required to come to life
-    int stayAlive[]={2};//Number of cells scanned required to stay alive
+    int comeAlive[];//Number of cells scanned required to come to life
+    int stayAlive[];//Number of cells scanned required to stay alive
     int lotsGenCount=100;//Amount of generations done when the lots of generations command is played
     //Save file names
     final String COMMANDS_FILE="commands.txt";
@@ -58,7 +58,7 @@ public class Main
                 boolean dontBreak=true;
                 while (dontBreak){
                     try{//Y size
-                        System.out.println("How wide do you want the world to be? NB- Large world size ");
+                        System.out.println("How wide do you want the world to be? NB- Large worlds can cause rendering issues");
                         ySize=(Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", "")));//Removes spaces and sets scanner input to lower case
                         if (!(ySize<1)){
                             dontBreak=false;
@@ -72,7 +72,7 @@ public class Main
                 dontBreak=true;
                 while (dontBreak){
                     try{//X size
-                        System.out.println("How tall do you want the world to be");
+                        System.out.println("How tall do you want the world to be? NB- Large worlds can cause rendering issues");
                         xSize=(Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", "")));//Removes spaces and sets scanner input to lower case
                         if (!(xSize<1)){
                             dontBreak=false;
@@ -107,30 +107,34 @@ public class Main
                         for(int i=0;i<stayAlive.length;i++){
                             System.out.println("What number of cells required to stay the same?");
                             stayAlive[i]=Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""));//Removes spaces and sets scanner input to lower case
+                            System.out.println("p0");
                             if (!(stayAlive[i]<1)){
-                                dontBreak=false;
-                                i=comeAlive.length;
+                                System.out.println("p0.5");
+                                i=stayAlive.length;
+                                System.out.println("p1");
                             }else{
                                 System.out.println("That is too small number");
-                            }}
+                            }
+                            System.out.println("p2");
+                        }
+                        System.out.println("p3");
                         dontBreak=false;
                     }catch(Exception e){
-                        System.out.println("That isn't a number");
+                        System.out.println("That isn't a number"+stayAlive);
                     }
                 }
                 dontBreak=true;
                 while (dontBreak){
                     try{//Required amount of cell to become alive
-                        System.out.println("How many numbers of cells do you want to be required for the cell to become?");
-                        setupScannerOutput=scanner.nextLine().toLowerCase().replace(" ", "");//Removes spaces and sets scanner input to lower case
+                        System.out.println("How many numbers of cells do you want to be required for the cell to become alive?");
+                        int comeAlive[]=new int[Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""))];//Removes spaces and sets scanner input to lower case
                         for(int i=0;i<comeAlive.length;i++){
                             System.out.println("What number of cells required to become alive?");
                             comeAlive[i]=Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""));//Removes spaces and sets scanner input to lower case
                             if (!(comeAlive[i]<1)){
-                                dontBreak=false;
                                 i=comeAlive.length;
                             }else{
-                                System.out.println("That is too small number");
+                                System.out.println("That is too small number"+comeAlive);
                             }
                         }
                         dontBreak=false;
@@ -165,6 +169,35 @@ public class Main
                     setupScannerOutput=scanner.nextLine().toLowerCase().replace(" ", "");//Removes spaces and sets scanner input to lower case
                     String arrayOfThisGen[]=load(SAVES_FILE).split(",");
                     dontBreak=false;
+                    //metadata Order- comeAlive[.]~stayAlive[.]~ySize~xSize~renderGrid(1true,0false)~renderAdValues(1true,0false)
+                    String metadata[]=arrayOfThisGen[0].split("~");
+                    //Requires string temp varibles to convert to int
+                    //Loads comeAlive
+                    String comeAliveString[]=metadata[0].split(".");
+                    comeAlive=new int[comeAliveString.length];
+                    for (int i=0;i<comeAliveString.length;i++){
+                        comeAlive[i]=Integer.parseInt(comeAliveString[i]);
+                    }
+                    //Loads stayAlive
+                    String stayAliveString[]=metadata[1].split(".");
+                    stayAlive=new int[stayAliveString.length];
+                    for (int i=0;i<stayAliveString.length;i++){
+                        stayAlive[i]=Integer.parseInt(stayAliveString[i]);
+                    }
+                    //Loads life size
+                    ySize=Integer.parseInt(metadata[2]);
+                    xSize=Integer.parseInt(metadata[3]);
+                    //Loads render settings
+                    if(metadata[4].equals("1")){
+                        renderGrid=true;
+                    }else{
+                        renderGrid=false;
+                    }
+                    if(metadata[5].equals("1")){
+                        renderAdValues=true;
+                    }else{
+                        renderAdValues=false;
+                    }
                 }catch(Exception e){
                     System.out.println("Save files-");
                     for(int i=0;i<saveFiles.length;i++){
@@ -341,8 +374,37 @@ public class Main
                         System.out.println("Error, please try again");
                     }
                 }
-                String thisGenInStr="";//Converts this generation into a single string
-                for(int i=0;i<thisGen.length;i++){
+                String thisGenInStr="";
+                //Get metadata Order- comeAlive[.]~stayAlive[.]~ySize~xSize~renderGrid(1true,0false)~renderAdValues(1true,0false)
+                for(int i=0;i<comeAlive.length;i++){//Gets come alive values
+                    thisGenInStr+=comeAlive[i];
+                    thisGenInStr+=".";
+                }
+                thisGenInStr+="~";
+                for(int i=0;i<stayAlive.length;i++){//Gets stay alive values
+                    thisGenInStr+=stayAlive[i];
+                    thisGenInStr+=".";
+                }
+                //Gets size of life
+                thisGenInStr+="~";
+                thisGenInStr+=ySize;
+                thisGenInStr+="~";
+                thisGenInStr+=xSize;
+                //Gets rendering settings
+                thisGenInStr+="~";
+                if(renderGrid){
+                    thisGenInStr+="1";
+                }else{
+                    thisGenInStr+="0";
+                }
+                thisGenInStr+="~";
+                if(renderAdValues){
+                    thisGenInStr+="1";
+                }else{
+                    thisGenInStr+="0";
+                }
+                thisGenInStr+=",";
+                for(int i=0;i<thisGen.length;i++){//Converts this generation into a single string
                     for(int j=0;j<thisGen[i].length;j++){
                         if(thisGen[i][j]){
                             thisGenInStr+="1";
