@@ -2,7 +2,7 @@
  * Primary class
  *
  * @Brendan Shaw
- * @version 19, 30/6/22
+ * @version 20, 1/7/22
  */
 import java.io.File;//Allows file stuff
 import java.io.FileWriter;//Allows the writing of files so saved.
@@ -42,7 +42,8 @@ public class Main
     int scanningRange=1;//The number of tiles each side that each tile scans
     int comeAlive[];//Number of cells scanned required to come to life
     int stayAlive[];//Number of cells scanned required to stay alive
-    int lotsGenCount=100;//Amount of generations done when the lots of generations command is played
+    //Amount of generations done when the lots of generations command is played
+    int lotsGenCount=100;
     //Save file names
     final String COMMANDS_FILE="commands.txt";
     final String SAVES_FILE="saves.txt";
@@ -103,7 +104,7 @@ public class Main
                 while (dontBreak){
                     try{//Required amount of cell to stay alive
                         System.out.println("How many numbers of cells do you want to be required for the cell to stay the same?");
-                        int stayAlive[]=new int[Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""))];//Removes spaces and sets scanner input to lower case
+                        stayAlive=new int[Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""))];//Removes spaces and sets scanner input to lower case
                         for(int i=0;i<stayAlive.length;i++){
                             System.out.println("What number of cells required to stay the same?");
                             stayAlive[i]=Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""));//Removes spaces and sets scanner input to lower case
@@ -127,7 +128,7 @@ public class Main
                 while (dontBreak){
                     try{//Required amount of cell to become alive
                         System.out.println("How many numbers of cells do you want to be required for the cell to become alive?");
-                        int comeAlive[]=new int[Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""))];//Removes spaces and sets scanner input to lower case
+                        comeAlive=new int[Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""))];//Removes spaces and sets scanner input to lower case
                         for(int i=0;i<comeAlive.length;i++){
                             System.out.println("What number of cells required to become alive?");
                             comeAlive[i]=Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""));//Removes spaces and sets scanner input to lower case
@@ -155,8 +156,11 @@ public class Main
                         System.out.println("Error");
                     }
                 }
+                thisGen = new boolean[ySize][xSize];
+                lastGen = new boolean[ySize][xSize];
             }
-        }else if(setupScannerOutput.equals(commands[11])){//Stuff for loading
+            //Stuff for loading
+        }else if(setupScannerOutput.equals(commands[11])){
             String saveFiles[]=load(SAVES_FILE).split(",");
             System.out.println("Save files-");
             for(int i=0;i<saveFiles.length;i++){
@@ -167,36 +171,48 @@ public class Main
                 try{//Check to make sure that it is an actual file
                     System.out.println("Which save file to you wish to load?");
                     setupScannerOutput=scanner.nextLine().toLowerCase().replace(" ", "");//Removes spaces and sets scanner input to lower case
-                    String arrayOfThisGen[]=load(SAVES_FILE).split(",");
+                    String arrayOfThisGen[]=load(setupScannerOutput).split(",");
                     dontBreak=false;
-                    //metadata Order- comeAlive[.]~stayAlive[.]~ySize~xSize~renderGrid(1true,0false)~renderAdValues(1true,0false)
-                    String metadata[]=arrayOfThisGen[0].split("~");
+                    //settings Order- comeAlive[.]~stayAlive[.]~ySize~xSize~renderGrid(1true,0false)~renderAdValues(1true,0false).
+                    String settings[]=arrayOfThisGen[0].split("~");
                     //Requires string temp varibles to convert to int
                     //Loads comeAlive
-                    String comeAliveString[]=metadata[0].split(".");
+                    String comeAliveString[]=settings[0].split("`");
                     comeAlive=new int[comeAliveString.length];
                     for (int i=0;i<comeAliveString.length;i++){
                         comeAlive[i]=Integer.parseInt(comeAliveString[i]);
                     }
                     //Loads stayAlive
-                    String stayAliveString[]=metadata[1].split(".");
+                    String stayAliveString[]=settings[1].split("`");
                     stayAlive=new int[stayAliveString.length];
                     for (int i=0;i<stayAliveString.length;i++){
                         stayAlive[i]=Integer.parseInt(stayAliveString[i]);
                     }
                     //Loads life size
-                    ySize=Integer.parseInt(metadata[2]);
-                    xSize=Integer.parseInt(metadata[3]);
+                    ySize=Integer.parseInt(settings[2]);
+                    xSize=Integer.parseInt(settings[3]);
                     //Loads render settings
-                    if(metadata[4].equals("1")){
+                    if(settings[4].equals("1")){
                         renderGrid=true;
                     }else{
                         renderGrid=false;
                     }
-                    if(metadata[5].equals("1")){
+                    if(settings[5].equals("1")){
                         renderAdValues=true;
                     }else{
                         renderAdValues=false;
+                    }
+                    //Loads the data itself
+                    thisGen = new boolean[ySize][xSize];
+                    lastGen = new boolean[ySize][xSize];
+                    for(int i=1;i<ySize;i++){
+                        String yLine[]=arrayOfThisGen[i].split("~");
+                        for(int j=0;j<xSize;j++){
+                            if(yLine[j].equals("1")){//If this cell has a '1' then make it alive
+                                thisGen[j][i-1]=true;
+                                lastGen[j][i-1]=true;
+                            }//Dont need else because defult is false
+                        }
                     }
                 }catch(Exception e){
                     System.out.println("Save files-");
@@ -208,16 +224,25 @@ public class Main
         }else{//In case the user decides that they don't want to type one of my commands, a basic setup will occur
             //Setup values
             int scanningRange=1;//The number of tiles each side that each tile scans
-            int comeAlive[]={3};//Number of cells scanned required to come to life
-            int stayAlive[]={2};//Number of cells scanned required to stay alive
+            comeAlive=new int[1];comeAlive[0]=3;//Number of cells scanned required to come to life
+            stayAlive=new int[1];stayAlive[0]=2;//Number of cells scanned required to stay alive
             //Create arrays
             xSize=30;
             ySize=40;
+            thisGen = new boolean[ySize][xSize];
+            lastGen = new boolean[ySize][xSize];
         }
-        thisGen = new boolean[ySize][xSize];
-        lastGen = new boolean[ySize][xSize];
         //Keeps the game running until it is killed
         boolean running=true;
+        System.out.println(comeAlive.length);
+        for(int i=0;i<comeAlive.length;i++){
+            System.out.println(comeAlive[i]);
+        }
+        System.out.println("JHRJTNBEAMKHBEAkbg");
+        System.out.println(stayAlive.length);
+        for(int i=0;i<stayAlive.length;i++){
+            System.out.println(stayAlive[i]);
+        }
         while (running){
             //Reads input
             System.out.println("What do you want to do?");
@@ -375,7 +400,8 @@ public class Main
                     }
                 }
                 String thisGenInStr="";
-                //Get metadata Order- comeAlive[.]~stayAlive[.]~ySize~xSize~renderGrid(1true,0false)~renderAdValues(1true,0false)
+                //Get settings Order- comeAlive[.]~stayAlive[.]~ySize~xSize~renderGrid(1true,0false)~renderAdValues(1true,0false)
+                
                 for(int i=0;i<comeAlive.length;i++){//Gets come alive values
                     thisGenInStr+=comeAlive[i];
                     thisGenInStr+=".";
@@ -407,9 +433,9 @@ public class Main
                 for(int i=0;i<thisGen.length;i++){//Converts this generation into a single string
                     for(int j=0;j<thisGen[i].length;j++){
                         if(thisGen[i][j]){
-                            thisGenInStr+="1";
+                            thisGenInStr+="1~";
                         }else{
-                            thisGenInStr+="0";
+                            thisGenInStr+="0~";
                         }
                     }
                     thisGenInStr+=",";
