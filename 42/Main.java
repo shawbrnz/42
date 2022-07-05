@@ -2,7 +2,7 @@
  * Primary class
  *
  * @Brendan Shaw
- * @version 20, 1/7/22
+ * @version 21, 6/7/22
  */
 import java.io.File;//Allows file stuff
 import java.io.FileWriter;//Allows the writing of files so saved.
@@ -108,20 +108,14 @@ public class Main
                         for(int i=0;i<stayAlive.length;i++){
                             System.out.println("What number of cells required to stay the same?");
                             stayAlive[i]=Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""));//Removes spaces and sets scanner input to lower case
-                            System.out.println("p0");
-                            if (!(stayAlive[i]<1)){
-                                System.out.println("p0.5");
+                            if ((stayAlive[i]<1)){
                                 i=stayAlive.length;
-                                System.out.println("p1");
-                            }else{
                                 System.out.println("That is too small number");
                             }
-                            System.out.println("p2");
                         }
-                        System.out.println("p3");
                         dontBreak=false;
                     }catch(Exception e){
-                        System.out.println("That isn't a number"+stayAlive);
+                        System.out.println("That isn't a number");
                     }
                 }
                 dontBreak=true;
@@ -132,10 +126,9 @@ public class Main
                         for(int i=0;i<comeAlive.length;i++){
                             System.out.println("What number of cells required to become alive?");
                             comeAlive[i]=Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""));//Removes spaces and sets scanner input to lower case
-                            if (!(comeAlive[i]<1)){
+                            if ((comeAlive[i]<1)){
                                 i=comeAlive.length;
-                            }else{
-                                System.out.println("That is too small number"+comeAlive);
+                                System.out.println("That is too small number");
                             }
                         }
                         dontBreak=false;
@@ -215,6 +208,8 @@ public class Main
                         }
                     }
                 }catch(Exception e){
+                    System.out.println("cf");
+                    e.printStackTrace();
                     System.out.println("Save files-");
                     for(int i=0;i<saveFiles.length;i++){
                         System.out.println(saveFiles[i]);
@@ -227,22 +222,13 @@ public class Main
             comeAlive=new int[1];comeAlive[0]=3;//Number of cells scanned required to come to life
             stayAlive=new int[1];stayAlive[0]=2;//Number of cells scanned required to stay alive
             //Create arrays
-            xSize=30;
-            ySize=40;
+            xSize=10;
+            ySize=10;
             thisGen = new boolean[ySize][xSize];
             lastGen = new boolean[ySize][xSize];
         }
         //Keeps the game running until it is killed
         boolean running=true;
-        System.out.println(comeAlive.length);
-        for(int i=0;i<comeAlive.length;i++){
-            System.out.println(comeAlive[i]);
-        }
-        System.out.println("JHRJTNBEAMKHBEAkbg");
-        System.out.println(stayAlive.length);
-        for(int i=0;i<stayAlive.length;i++){
-            System.out.println(stayAlive[i]);
-        }
         while (running){
             //Reads input
             System.out.println("What do you want to do?");
@@ -404,12 +390,12 @@ public class Main
                 
                 for(int i=0;i<comeAlive.length;i++){//Gets come alive values
                     thisGenInStr+=comeAlive[i];
-                    thisGenInStr+=".";
+                    thisGenInStr+="`";
                 }
                 thisGenInStr+="~";
                 for(int i=0;i<stayAlive.length;i++){//Gets stay alive values
                     thisGenInStr+=stayAlive[i];
-                    thisGenInStr+=".";
+                    thisGenInStr+="`";
                 }
                 //Gets size of life
                 thisGenInStr+="~";
@@ -551,7 +537,7 @@ public class Main
     public int testAdCell(int yLook, int xLook, int yCurrent, int xCurrent){
         //If it is currently tring to look a cell that is out of the world
         if((yLook+yCurrent)<0){yLook=(ySize-1);}
-        if((yLook+yCurrent)>(ySize-1)){yLook=0;}
+        if((yLook+yCurrent)>(ySize-1)){yLook=0;System.out.println("tested y");}
         if((xLook+xCurrent)<0){xLook=(xSize-1);}
         if((xLook+xCurrent)>(xSize-1)){xLook=0;}
         //Returns either 1 or 0 based on whether the selcted cell is alive or dead
