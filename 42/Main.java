@@ -2,7 +2,7 @@
  * Primary class
  *
  * @Brendan Shaw
- * @version 21, 6/7/22
+ * @version 22, 7/7/22
  */
 import java.io.File;//Allows file stuff
 import java.io.FileWriter;//Allows the writing of files so saved.
@@ -88,7 +88,7 @@ public class Main
                 dontBreak=true;
                 while (dontBreak){
                     try{//Scanner size
-                        System.out.println("How many adjecent cells would you like the cells to scan");
+                        System.out.println("How many adjecent cells would you like the cells to scan? (default 1)");
                         scanningRange=(Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", "")));//Removes spaces and sets scanner input to lower case
                         if (!(scanningRange<1)){
                             dontBreak=false;
@@ -103,10 +103,10 @@ public class Main
                 dontBreak=true;
                 while (dontBreak){
                     try{//Required amount of cell to stay alive
-                        System.out.println("How many numbers of cells do you want to be required for the cell to stay the same?");
+                        System.out.println("How many numbers of cells do you want to be required for the cell to stay the same? (default 1)");
                         stayAlive=new int[Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""))];//Removes spaces and sets scanner input to lower case
                         for(int i=0;i<stayAlive.length;i++){
-                            System.out.println("What number of cells required to stay the same?");
+                            System.out.println("What number of cells required to stay the same? (default 2)");
                             stayAlive[i]=Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""));//Removes spaces and sets scanner input to lower case
                             if ((stayAlive[i]<1)){
                                 i=stayAlive.length;
@@ -121,10 +121,10 @@ public class Main
                 dontBreak=true;
                 while (dontBreak){
                     try{//Required amount of cell to become alive
-                        System.out.println("How many numbers of cells do you want to be required for the cell to become alive?");
+                        System.out.println("How many numbers of cells do you want to be required for the cell to become alive? (default 1)");
                         comeAlive=new int[Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""))];//Removes spaces and sets scanner input to lower case
                         for(int i=0;i<comeAlive.length;i++){
-                            System.out.println("What number of cells required to become alive?");
+                            System.out.println("What number of cells required to become alive? (default 3)");
                             comeAlive[i]=Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", ""));//Removes spaces and sets scanner input to lower case
                             if ((comeAlive[i]<1)){
                                 i=comeAlive.length;
@@ -162,9 +162,9 @@ public class Main
             boolean dontBreak=true;
             while (dontBreak){
                 try{//Check to make sure that it is an actual file
-                    System.out.println("Which save file to you wish to load?");
+                    System.out.println("Which save file to you wish to load? (.txt not needed)");
                     setupScannerOutput=scanner.nextLine().toLowerCase().replace(" ", "");//Removes spaces and sets scanner input to lower case
-                    String arrayOfThisGen[]=load(setupScannerOutput).split(",");
+                    String arrayOfThisGen[]=load(setupScannerOutput+".txt").split(",");
                     dontBreak=false;
                     //settings Order- comeAlive[.]~stayAlive[.]~ySize~xSize~renderGrid(1true,0false)~renderAdValues(1true,0false).
                     String settings[]=arrayOfThisGen[0].split("~");
@@ -208,8 +208,7 @@ public class Main
                         }
                     }
                 }catch(Exception e){
-                    System.out.println("cf");
-                    e.printStackTrace();
+                    dontBreak=true;
                     System.out.println("Save files-");
                     for(int i=0;i<saveFiles.length;i++){
                         System.out.println(saveFiles[i]);
@@ -361,20 +360,27 @@ public class Main
             //Save command
             if ((scannerOutput.equals(commands[10]))){//Saves current state of life
                 boolean dontBreak=true;
+                boolean newSave=false;
                 String saveFileName="error.txt";//Forces the program to write to error.txt in case of errorsav
+                String saveFiles[]=load(SAVES_FILE).split(",");
+                System.out.println("Save files-");
+                for(int i=0;i<saveFiles.length;i++){
+                    System.out.println(saveFiles[i]);
+                }
                 while (dontBreak){
+                    newSave=false;
                     try{//Check to see if the user wishs to save to a file which it should not
                         System.out.println("Where would you like to save to? (Does not need .txt)");
                         saveFileName=(scanner.nextLine().toLowerCase().replace(" ", ""))+".txt";//Removes spaces and sets scanner input to lower case
                         if(saveFileName.equals(SAVES_FILE)||saveFileName.equals(COMMANDS_FILE)){//If the user decides that yes or no is not a good enough answer, they will have to redo the setup
                             System.out.println("Cannot save to this file, please save to another file");
                         }else{
-                            String saveFiles[]=load(SAVES_FILE).split(",");
                             String responce="yes";
                             for(int i=0;i<saveFiles.length;i++){
-                                if(saveFileName.equals(saveFiles[i])){//Asks user if they would like to override the selected file
+                                if(saveFileName.equals(saveFiles[i]+".txt")){//Asks user if they would like to override the selected file
                                     System.out.println("There is a file with that name already, do you wish to override?");
                                     responce=(scanner.nextLine().toLowerCase().replace(" ", ""));//Removes spaces and sets scanner input to lower case 
+                                    newSave=true;
                                 }
                             }
                             if(responce.equals("yes")){//Requires the responce to be yes, so if the user does a typo, the file wont be overriden
@@ -387,7 +393,7 @@ public class Main
                 }
                 String thisGenInStr="";
                 //Get settings Order- comeAlive[.]~stayAlive[.]~ySize~xSize~renderGrid(1true,0false)~renderAdValues(1true,0false)
-                
+
                 for(int i=0;i<comeAlive.length;i++){//Gets come alive values
                     thisGenInStr+=comeAlive[i];
                     thisGenInStr+="`";
@@ -427,6 +433,9 @@ public class Main
                     thisGenInStr+=",";
                 }
                 save(saveFileName,thisGenInStr);
+                if(!newSave){
+                    save(SAVES_FILE,load(SAVES_FILE)+saveFileName.replace(".txt", "")+",");
+                }
                 validCommand=true;
                 dontRender=true;
             }
@@ -537,9 +546,9 @@ public class Main
     public int testAdCell(int yLook, int xLook, int yCurrent, int xCurrent){
         //If it is currently tring to look a cell that is out of the world
         if((yLook+yCurrent)<0){yLook=(ySize-1);}
-        if((yLook+yCurrent)>(ySize-1)){yLook=0;System.out.println("tested y");}
+        if((yLook+yCurrent)>(ySize-1)){yLook=(0-yCurrent);}
         if((xLook+xCurrent)<0){xLook=(xSize-1);}
-        if((xLook+xCurrent)>(xSize-1)){xLook=0;}
+        if((xLook+xCurrent)>(xSize-1)){xLook=(0-xCurrent);}
         //Returns either 1 or 0 based on whether the selcted cell is alive or dead
         if (yLook==0&&xLook==0){//If it is testing the center cell, return 0
             return 0;}
