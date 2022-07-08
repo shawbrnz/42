@@ -2,7 +2,7 @@
  * Primary class
  *
  * @Brendan Shaw
- * @version 22, 7/7/22
+ * @version 23, 8/7/22
  */
 import java.io.File;//Allows file stuff
 import java.io.FileWriter;//Allows the writing of files so saved.
@@ -14,18 +14,19 @@ public class Main
 
     //Commands. This is in an array for easy modification
     String commands[]={
+        "load",//Loads from save file
             "end",//Ends the simulation
             "go",//Goes one generation
-            "lots",//Does lots of generations
             "grid",//Toggles grid 
             "advals",//Toggles the array of adjecent cells
             "swap",//Toggles swapmode
             "do",//Toggles domode
-            "render",//renders the generation
+            "lots",//Does lots of generations
             "customise",//Allows customisation
             "help",//Lists all commands
-            "save",//Saves this generation
-            "load"};//Loads from save file
+            "save",//Saves this generation 
+            "render"//renders the generation
+    };
     //What generation the game is in
     int gen=0;
     //X and Y size, in case the while loop breaks
@@ -51,7 +52,7 @@ public class Main
     public Main()
     {
         Scanner scanner = new Scanner(System.in);//Set up the scanner
-        System.out.println("Would you like start a 'basic' setup, an 'advanced' setup or '"+commands[11]+"'?");
+        System.out.println("Would you like start a 'basic' setup, an 'advanced' setup or '"+commands[0]+"'?");
         String setupScannerOutput=scanner.nextLine().toLowerCase().replace(" ", "");//Removes spaces and sets scanner input to lower case
         if(setupScannerOutput.equals("advanced")){//Advanced setup
             boolean inSetup=true;
@@ -153,9 +154,9 @@ public class Main
                 lastGen = new boolean[ySize][xSize];
             }
             //Stuff for loading
-        }else if(setupScannerOutput.equals(commands[11])){
+        }else if(setupScannerOutput.equals(commands[0])){
             String saveFiles[]=load(SAVES_FILE).split(",");
-            System.out.println("Save files-");
+            System.out.println("Save file"+plural(saveFiles.length)+"-");
             for(int i=0;i<saveFiles.length;i++){
                 System.out.println(saveFiles[i]);
             }
@@ -209,7 +210,7 @@ public class Main
                     }
                 }catch(Exception e){
                     dontBreak=true;
-                    System.out.println("Save files-");
+                    System.out.println("Save file"+plural(saveFiles.length)+"-");
                     for(int i=0;i<saveFiles.length;i++){
                         System.out.println(saveFiles[i]);
                     }
@@ -234,30 +235,21 @@ public class Main
             String scannerOutput=scanner.nextLine().toLowerCase().replace(" ", "");//Removes spaces and sets scanner input to lower case
             //If none of the commands work, then this should tell the user
             boolean validCommand=false;
-            //Swap mode
+            //The modes
             boolean swapMode = false;
-            //do mode
             boolean doMode = false;
+            boolean lotsMode = false;
             //If true, then it wont render at the end of this loop. Used for the generation loop so 
             boolean dontRender=false;
             //end command. It is first so user cannot softlock if user modifies preferences file
-            if ((scannerOutput.equals(commands[0]))){
+            if ((scannerOutput.equals(commands[1]))){
                 running=false;
                 validCommand=true;}
             //Do generations command
-            if ((scannerOutput.equals(commands[1]))){//Does one generation
-                dontRender=true;
+            if ((scannerOutput.equals(commands[2]))){//Does one generation
                 validCommand=true;
                 System.out.println("Starting one gen?");
                 doGen();
-            }
-            if ((scannerOutput.equals(commands[2]))){//Does more than one generation
-                dontRender=true;
-                validCommand=true;
-                System.out.println("Starting "+lotsGenCount+" gen?");
-                for(int i=0; i<lotsGenCount;i++){
-                    doGen();
-                }
             }
             //toggles grid
             if ((scannerOutput.equals(commands[3]))){
@@ -277,10 +269,10 @@ public class Main
                     String cellSwapping[]=scanner.nextLine().split(" ");
                     if(cellSwapping[0].equals(commands[5])){//Exits swap mode
                         swapMode=false;
-                    }else if(cellSwapping[0].equals(commands[0])){//As a fail safe in case the user (me at the moment) cannot spell swao properly
+                    }else if(cellSwapping[0].equals(commands[1])){//As a fail safe in case the user (me at the moment) cannot spell swao properly
                         running=false;
                         swapMode=false;
-                    }else if(cellSwapping[0].equals(commands[1])){
+                    }else if(cellSwapping[0].equals(commands[2])){
                         swapMode=false;
                         System.out.println("Leaving swap mode and playing 1 generation");
                         doGen();
@@ -299,16 +291,17 @@ public class Main
                     String cellDoing[]=scanner.nextLine().split(" ");
                     if(cellDoing[0].equals(commands[6])){//Exits swap mode
                         doMode=false;
-                    }else if(cellDoing[0].equals(commands[0])){//As a fail safe in case the user (me at the moment) cannot spell swao properly
+                    }else if(cellDoing[0].equals(commands[1])){//As a fail safe in case the user (me at the moment) cannot spell swao properly
                         running=false;
                         doMode=false;
-                    }else if(cellDoing[0].equals(commands[1])){
-                        swapMode=false;
+                    }else if(cellDoing[0].equals(commands[2])){
+                        doMode=false;
                         System.out.println("Leaving do mode and playing 1 generation");
                         doGen();
                     }else{//Otherwise it will try to swap the corrdinates
                         try{
-                            testCell(Integer.parseInt(cellDoing[0]),Integer.parseInt(cellDoing[1]));
+                            int temp = testCell(Integer.parseInt(cellDoing[0])-1,Integer.parseInt(cellDoing[1])-1);
+                            System.out.println(temp);
                             renderBooleanArray(thisGen);//Render so user can see modification
                         }catch(Exception e){
                             System.out.println("You can't do that");
@@ -316,10 +309,37 @@ public class Main
                     }
                 }
             }
-            //Render command
+            //lots mode
             if ((scannerOutput.equals(commands[7]))){
                 validCommand=true;
-                //All it does is stops the replies with the invalid command, and the auto render renders the generation
+                dontRender=true;
+                lotsMode=true;
+                while(lotsMode){
+                    System.out.println("How many generations do you want to process? (Type '"+commands[7]+"' to exit)");
+                    String genCount=scanner.nextLine();
+                    if(genCount.equals(commands[7])){//Exits swap mode
+                        lotsMode=false;
+                    }else if(genCount.equals(commands[1])){//As a fail safe in case the user (me at the moment) cannot spell swao properly
+                        running=false;
+                        lotsMode=false;
+                    }else if(genCount.equals(commands[2])){
+                        lotsMode=false;
+                        System.out.println("Leaving lots mode and playing 1 generation");
+                        doGen();
+                    }else{//Otherwise it will try to swap the corrdinates
+                        try{
+                            for(int i=0; i<Integer.parseInt(genCount);i++){
+                                   doGen();
+                            }
+                            System.out.println("Processed "+genCount+" generation"+plural(Integer.parseInt(genCount)));
+                            //Renders this generation
+                            System.out.println("Generation "+gen);
+                            renderBooleanArray(thisGen);
+                        }catch(Exception e){
+                            System.out.println("Thats not a number");
+                        }
+                    }
+                }
             }
             //Customise commands
             if ((scannerOutput.equals(commands[8]))){//Asks the user what it would like to change
@@ -352,7 +372,7 @@ public class Main
             //Help command
             if ((scannerOutput.equals(commands[9]))){//Lists all commands
                 for(int i=0;i<commands.length;i++){
-                    System.out.println(commands[i]);
+                    System.out.println((i+1)+"- "+commands[i]);
                 }
                 validCommand=true;
                 dontRender=true;
@@ -363,7 +383,7 @@ public class Main
                 boolean newSave=false;
                 String saveFileName="error.txt";//Forces the program to write to error.txt in case of errorsav
                 String saveFiles[]=load(SAVES_FILE).split(",");
-                System.out.println("Save files-");
+                System.out.println("Save file"+plural(saveFiles.length)+"-");
                 for(int i=0;i<saveFiles.length;i++){
                     System.out.println(saveFiles[i]);
                 }
@@ -439,8 +459,15 @@ public class Main
                 validCommand=true;
                 dontRender=true;
             }
+            //Render command
+            if ((scannerOutput.equals(commands[11]))){
+                validCommand=true;
+                //All it does is stops the replies with the invalid command, and the auto render renders the generation
+            }
             //Prints cells if it hasnt been told not to
             if(!dontRender){
+                //Renders this generation
+                System.out.println("Generation "+gen);
                 renderBooleanArray(thisGen);
             }
             //Invalid command
@@ -505,9 +532,6 @@ public class Main
             }
         }
         gen++;
-        //Renders this generation
-        System.out.println("Generation "+gen);
-        renderBooleanArray(thisGen);
         //Renders ajacent cells alive last generation
         if(renderAdValues){
             System.out.println("Ad cells for "+gen);
