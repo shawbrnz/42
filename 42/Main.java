@@ -2,7 +2,7 @@
  * Primary class
  *
  * @Brendan Shaw
- * @version 23, 8/7/22
+ * @version 24, 10/8/22
  */
 import java.io.File;//Allows file stuff
 import java.io.FileWriter;//Allows the writing of files so saved.
@@ -14,7 +14,7 @@ public class Main
 
     //Commands. This is in an array for easy modification
     String commands[]={
-        "load",//Loads from save file
+            "load",//Loads from save file
             "end",//Ends the simulation
             "go",//Goes one generation
             "grid",//Toggles grid 
@@ -26,7 +26,7 @@ public class Main
             "help",//Lists all commands
             "save",//Saves this generation 
             "render"//renders the generation
-    };
+        };
     //What generation the game is in
     int gen=0;
     //X and Y size, in case the while loop breaks
@@ -62,7 +62,7 @@ public class Main
                     try{//Y size
                         System.out.println("How wide do you want the world to be? NB- Large worlds can cause rendering issues");
                         ySize=(Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", "")));//Removes spaces and sets scanner input to lower case
-                        if (!(ySize<1)){
+                        if (!(ySize<1)){//If the user enters more than 0, break the loop
                             dontBreak=false;
                         }else{
                             System.out.println("That is too small number");
@@ -76,7 +76,7 @@ public class Main
                     try{//X size
                         System.out.println("How tall do you want the world to be? NB- Large worlds can cause rendering issues");
                         xSize=(Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", "")));//Removes spaces and sets scanner input to lower case
-                        if (!(xSize<1)){
+                        if (!(xSize<1)){//If the user enters more than 0, break the loop
                             dontBreak=false;
                         }else{
                             System.out.println("That is too small number");
@@ -91,7 +91,7 @@ public class Main
                     try{//Scanner size
                         System.out.println("How many adjecent cells would you like the cells to scan? (default 1)");
                         scanningRange=(Integer.parseInt(scanner.nextLine().toLowerCase().replace(" ", "")));//Removes spaces and sets scanner input to lower case
-                        if (!(scanningRange<1)){
+                        if (!(scanningRange<1)){//If the user enters more than 0, break the loop
                             dontBreak=false;
                         }else{
                             System.out.println("That is too small number");
@@ -157,7 +157,7 @@ public class Main
         }else if(setupScannerOutput.equals(commands[0])){
             String saveFiles[]=load(SAVES_FILE).split(",");
             System.out.println("Save file"+plural(saveFiles.length)+"-");
-            for(int i=0;i<saveFiles.length;i++){
+            for(int i=0;i<saveFiles.length;i++){//prints avibile save files
                 System.out.println(saveFiles[i]);
             }
             boolean dontBreak=true;
@@ -291,7 +291,7 @@ public class Main
                     String cellDoing[]=scanner.nextLine().split(" ");
                     if(cellDoing[0].equals(commands[6])){//Exits swap mode
                         doMode=false;
-                    }else if(cellDoing[0].equals(commands[1])){//As a fail safe in case the user (me at the moment) cannot spell swao properly
+                    }else if(cellDoing[0].equals(commands[1])){//As a fail safe in case the user (me at the moment) cannot spell dp properly
                         running=false;
                         doMode=false;
                     }else if(cellDoing[0].equals(commands[2])){
@@ -319,7 +319,7 @@ public class Main
                     String genCount=scanner.nextLine();
                     if(genCount.equals(commands[7])){//Exits swap mode
                         lotsMode=false;
-                    }else if(genCount.equals(commands[1])){//As a fail safe in case the user (me at the moment) cannot spell swao properly
+                    }else if(genCount.equals(commands[1])){//As a fail safe in case the user (me at the moment) cannot spell lote properly
                         running=false;
                         lotsMode=false;
                     }else if(genCount.equals(commands[2])){
@@ -329,7 +329,7 @@ public class Main
                     }else{//Otherwise it will try to swap the corrdinates
                         try{
                             for(int i=0; i<Integer.parseInt(genCount);i++){
-                                   doGen();
+                                doGen();//Does set amount of generations
                             }
                             System.out.println("Processed "+genCount+" generation"+plural(Integer.parseInt(genCount)));
                             //Renders this generation
@@ -352,13 +352,13 @@ public class Main
                     if(commands[i]==modifyingCommandName){
                         for(int j=0;j<commands.length;j++){
                             if(newCommandName.equals(commands[j])){
-                                existingName=true;
+                                existingName=true;//If it is an existing commands, then it cannot do the command
                             }
                         }
-                        if(!existingName){
+                        if(!existingName){//oTherwise, change sellected command
                             commands[i]=newCommandName;
                             String stringOfCommands="";
-                            for(int j=0;j<commands.length;j++){
+                            for(int j=0;j<commands.length;j++){//Saves names of commands
                                 stringOfCommands+=commands[j]+",";
                             }
                             save(COMMANDS_FILE, stringOfCommands);
@@ -383,14 +383,14 @@ public class Main
                 boolean newSave=false;
                 String saveFileName="error.txt";//Forces the program to write to error.txt in case of errorsav
                 String saveFiles[]=load(SAVES_FILE).split(",");
-                System.out.println("Save file"+plural(saveFiles.length)+"-");
-                for(int i=0;i<saveFiles.length;i++){
+                System.out.println("Save file"+plural(saveFiles.length)+" available-");
+                for(int i=0;i<saveFiles.length;i++){//Prints avibile saves
                     System.out.println(saveFiles[i]);
                 }
                 while (dontBreak){
                     newSave=false;
                     try{//Check to see if the user wishs to save to a file which it should not
-                        System.out.println("Where would you like to save to? (Does not need .txt)");
+                        System.out.println("Where would you like to save to? (Does not need .txt, doesn't need a current save)");
                         saveFileName=(scanner.nextLine().toLowerCase().replace(" ", ""))+".txt";//Removes spaces and sets scanner input to lower case
                         if(saveFileName.equals(SAVES_FILE)||saveFileName.equals(COMMANDS_FILE)){//If the user decides that yes or no is not a good enough answer, they will have to redo the setup
                             System.out.println("Cannot save to this file, please save to another file");
@@ -481,12 +481,12 @@ public class Main
 
     //Functions that make my life easier
 
-    //Tests to see if number should be plural
+    //Tests to see if number should be plural. I added this towards the end of the project, so some strings might still have regular plural
     public String plural(int number){
         if(number==1){return "";}
         return "s";
     }
-    //Swaps the values of booleans
+    //Swaps the values of booleans. There's probably a built in function for this but it is easier just to make this than to find it
     public boolean swapBoolean(boolean testedBoolean){
         if(testedBoolean){
             return false;
@@ -494,7 +494,7 @@ public class Main
         return true;
     }
 
-    //Processes swap commands
+    //Processes swap commands (user command)
     public void swap(String coordinates[]){
         try{ 
             if(thisGen[Integer.parseInt(coordinates[0])-1][Integer.parseInt(coordinates[1])-1]){
@@ -586,7 +586,7 @@ public class Main
 
     //Render Arrays
 
-    //Boolean arrays
+    //Boolean arrays (used for rendering generations)
 
     //Renders a 2d boolean array with a grid
     public void gridedBooleanArray(String trueValue, String falseValue, boolean array[][]){
@@ -655,7 +655,7 @@ public class Main
         }
     }
 
-    //Value arrays
+    //Value arrays (used for advals debug tool which I left in)
 
     //Renders a 2d Array based on numbers from each cell without a grid
     public void gridlessIntArray(int array[][]){
